@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>1분마다 이미지 변경</title>
+    <style>
+        /* 로딩바 스타일 */
+        #loadingBar {
+            width: 100%;
+            height: 20px;
+            background-color: #e0e0e0;
+            margin: 10px 0;
+        }
+        #progressBar {
+            height: 100%;
+            background-color: #76c7c0;
+            width: 0;
+        }
+        /* 현재 시간 스타일 */
+        #currentTime {
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <img id="myImage" src="" alt="Image" width="300">
+
+    <div id="loadingBar">
+        <div id="progressBar"></div>
+    </div>
+    <div id="currentTime">현재 시간: </div>
+
+    <script>
+        // 60개의 이미지 경로 배열
+        const images = [
+            'C:/Users/tpgjs/Desktop/backjoon/case_1.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_2.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_3.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_4.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_5.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_6.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_7.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_8.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_9.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_10.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_11.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_12.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_13.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_14.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_15.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_16.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_17.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_18.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_19.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_20.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_21.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_22.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_23.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_24.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_25.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_26.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_27.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_28.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_29.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_30.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_31.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_32.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_33.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_34.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_35.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_36.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_37.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_38.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_39.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_40.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_41.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_42.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_43.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_44.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_45.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_46.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_47.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_48.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_49.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_50.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_51.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_52.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_53.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_54.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_55.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_56.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_57.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_58.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_59.png',
+            'C:/Users/tpgjs/Desktop/backjoon/case_60.png',
+        ];
+
+        // 로딩 바와 현재 시간을 보여주기 위한 요소 선택
+        const progressBar = document.getElementById('progressBar');
+        const currentTimeElement = document.getElementById('currentTime');
+
+        function updateImage() {
+            // 현재 시각 가져오기
+            const now = new Date();
+
+            // 현재 분과 초 계산
+            const currentMinute = now.getMinutes();
+            const currentSecond = now.getSeconds();
+
+            // 현재 분에 해당하는 인덱스 계산
+            const imageIndex = currentMinute % images.length;
+
+            // 이미지 변경
+            document.getElementById('myImage').src = images[imageIndex];
+        }
+
+        function updateProgressBar() {
+            // 현재 시각 가져오기
+            const now = new Date();
+
+            // 다음 1분의 경계까지 남은 시간 계산
+            const secondsUntilNextMinute = 60 - now.getSeconds();
+
+            // 진행 바 길이 계산
+            const progress = ((60 - secondsUntilNextMinute) / 60) * 100;
+
+            // 진행 바 업데이트
+            progressBar.style.width = `${progress}%`;
+
+            // 현재 시간 업데이트
+            currentTimeElement.innerText = `현재 시간: ${now.toLocaleTimeString()}`;
+
+            // 남은 시간에 따라 다시 업데이트 예약
+            setTimeout(updateProgressBar, 1000);
+        }
+
+        function scheduleNextUpdate() {
+            // 현재 시각 가져오기
+            const now = new Date();
+
+            // 다음 1분의 경계까지 남은 시간 계산
+            const msUntilNextMinute = (60 - now.getSeconds()) * 1000;
+
+            // 다음 1분의 경계에 updateImage 함수 실행 예약
+            setTimeout(() => {
+                updateImage();
+                // 이후 1분마다 이미지 업데이트
+                setInterval(updateImage, 60000);
+            }, msUntilNextMinute);
+        }
+
+        // 페이지 로드 시 즉시 이미지 업데이트
+        updateImage();
+
+        // 다음 1분의 경계까지 이미지 업데이트 스케줄 예약
+        scheduleNextUpdate();
+
+        // 로딩바 및 현재 시간 업데이트 시작
+        updateProgressBar();
+    </script>
+</body>
+</html>
